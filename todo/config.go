@@ -20,7 +20,7 @@ func (c *Config) Client() (*todoclient.TodoList , error) {
 
 
 
-	log.Printf("[INFO] Pingdom Client configured for host: %s", c.Host)
+	log.Printf("[INFO] Todo Client configured for host: %s", c.Host)
 
 	return client, nil
 }

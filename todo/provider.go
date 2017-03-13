@@ -14,7 +14,7 @@ func Provider () terraform.ResourceProvider {
        "host" : &schema.Schema{
 				  Type:     schema.TypeString,
 				  Default: "localhost:9001",
-				  Optional: false,
+				  Optional: true,
 			  },
     },
 	  ResourcesMap: map[string]*schema.Resource{

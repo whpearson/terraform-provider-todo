@@ -32,6 +32,7 @@ func resourceTodoItem() *schema.Resource {
 			"completed": &schema.Schema{
 				Type:     schema.TypeString,
 				ForceNew: false,
+        Optional: true,
 			},
 
 			"description": &schema.Schema{
