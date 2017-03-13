@@ -15,7 +15,7 @@ type Config struct {
 //
 func (c *Config) Client() (*todoclient.TodoList , error) {
 
-  httptransportconfig := todoclient.DefaultTransportConfig().WithHost(c.Host)
+  httptransportconfig := todoclient.DefaultTransportConfig().WithHost(c.Host).WithSchemes([]string{"http"})
   client := todoclient.NewHTTPClientWithConfig(strfmt.Default, httptransportconfig )
 
 
