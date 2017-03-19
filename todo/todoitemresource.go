@@ -68,7 +68,7 @@ func itemForResource(d *schema.ResourceData) (*models.Item, error) {
 }
 
 func resourceTodoItemCreate(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*client.TodoList)
+	client := meta.(*client.SimpleToDoList)
 
 	item, err := itemForResource(d)
 	if err != nil {
@@ -89,13 +89,13 @@ func resourceTodoItemCreate(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceTodoItemRead(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*client.TodoList)
+	client := meta.(*client.SimpleToDoList)
 
 	id, err := strconv.ParseInt(d.Id(),10,32)
 	if err != nil {
 		return fmt.Errorf("Error retrieving id for resource: %s", err)
 	}
-	find, err := client.Todos.Find(todos.NewFindParams().WithTags([]int32{int32(id)}), nil)
+	find, err := client.Todos.Find(todos.NewFindParams().WithTags([]int32{int32(id)}).WithLimit(1), nil)
 	if err != nil {
 		return fmt.Errorf("Error retrieving list of items: %s", err)
 	}
@@ -119,7 +119,7 @@ func resourceTodoItemRead(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceTodoItemUpdate(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*client.TodoList)
+	client := meta.(*client.SimpleToDoList)
 
 	item, err := itemForResource(d)
 	if err != nil {
@@ -127,17 +127,21 @@ func resourceTodoItemUpdate(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	log.Printf("[DEBUG] Check update configuration: %#v ", d.Get("description") )
-  params := todos.NewUpdateOneParams()
+  params := todos.NewUpdateOneParams().WithID(d.Id())
   params.SetBody(item)
-	item_ok, _ := client.Todos.UpdateOne( params, nil)
-	d.SetId(strconv.Itoa(int(item_ok.Payload.ID)))
+	item_ok,err := client.Todos.UpdateOne( params, nil)
+	if err != nil {
+		return fmt.Errorf("Error updating check: %s", err)
+	}
+
+  d.SetId(strconv.Itoa(int(item_ok.Payload.ID)))
 
 	return nil
 
 }
 
 func resourceTodoItemDelete(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*client.TodoList)
+	client := meta.(*client.SimpleToDoList)
 
 	log.Printf("[INFO] Deleting Check: %v", d.Id())
 

@@ -13,7 +13,7 @@ type Config struct {
 
 // Client() returns a new client for accessing todo.
 //
-func (c *Config) Client() (*todoclient.TodoList , error) {
+func (c *Config) Client() (*todoclient.SimpleToDoList , error) {
 
   httptransportconfig := todoclient.DefaultTransportConfig().WithHost(c.Host).WithSchemes([]string{"http"})
   client := todoclient.NewHTTPClientWithConfig(strfmt.Default, httptransportconfig )
