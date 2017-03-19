@@ -28,13 +28,6 @@ func resourceTodoItem() *schema.Resource {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-
-			"completed": &schema.Schema{
-				Type:     schema.TypeString,
-				ForceNew: false,
-        Optional: true,
-			},
-
 			"description": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
@@ -45,7 +38,6 @@ func resourceTodoItem() *schema.Resource {
 }
 
 type commonItemParams struct {
-	Completed                bool
 	Description              string
 }
 
@@ -53,16 +45,12 @@ func itemForResource(d *schema.ResourceData) (*models.Item, error) {
 	itemParams := commonItemParams{}
 
 	// required
-	if v, ok := d.GetOk("completed"); ok {
-		itemParams.Completed = v.(bool)
-	}
 	if v, ok := d.GetOk("description"); ok {
 		itemParams.Description = v.(string)
 	}
 
 
 	return &models.Item{
-			Completed:                itemParams.Completed,
 			Description:              &itemParams.Description,
 	}, nil
 }
@@ -113,7 +101,6 @@ func resourceTodoItemRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	d.Set("description", item.Description)
-	d.Set("completed", item.Completed)
 
 	return nil
 }
